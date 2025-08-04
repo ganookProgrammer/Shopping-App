@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "753683839279",
+    "firebase_url": "https://ambulancebookingap-default-rtdb.firebaseio.com",
+    "project_id": "ambulancebookingap",
+    "storage_bucket": "ambulancebookingap.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753683839279:android:b1c0a713eb5b8671e289da",
+        "android_client_info": {
+          "package_name": "com.example.myshoppingadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "753683839279-99mirvupv7cvlaj80u1ff89je7ia4pc2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myshoppingadmin",
+            "certificate_hash": "8808e3eaf9552e1016f49fdeff898b7e32375c31"
+          }
+        },
+        {
+          "client_id": "753683839279-sd87f26dfuvutj01h0t0n0cuus7tl7gs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDoMHJdR9kpokASg8j-3hK-6lD3ATu6Js"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "753683839279-sd87f26dfuvutj01h0t0n0cuus7tl7gs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
