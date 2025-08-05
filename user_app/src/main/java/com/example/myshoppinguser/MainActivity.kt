@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.example.myshoppinguser.common.CustomAlertDialog
+import com.example.myshoppinguser.common.ProfileEdit
 import com.example.myshoppinguser.common.custom
 import com.example.myshoppinguser.presentation.navigation.AppNavigation
 import com.example.myshoppinguser.presentation.screen.LoginScreen
@@ -41,7 +42,9 @@ class MainActivity : ComponentActivity() {
 //                        LoginScreen()
 //                        ProductDetailsScreen()
 //                        AppNavigation(firebaseAuth)
-                        custom()
+//                        custom() AlertDialog
+                        ProfileEdit()
+
                     }
                 }
             }
