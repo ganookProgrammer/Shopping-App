@@ -1,18 +1,18 @@
 package com.example.myshoppinguser.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.example.myshoppinguser.presentation.navigation.SubNavigation
+import androidx.navigation.toRoute
+import com.example.myshoppinguser.common.CustomAlertDialog
 import com.example.myshoppinguser.presentation.pages.ProfilePage
 import com.example.myshoppinguser.presentation.screen.HomeScreenUI
 import com.example.myshoppinguser.presentation.screen.LoginScreen
+import com.example.myshoppinguser.presentation.screen.ProductDetailsScreen
 import com.example.myshoppinguser.presentation.screen.SignupScreenUI
 import com.google.firebase.auth.FirebaseAuth
-import okhttp3.Route
 
 @Composable
 fun AppNavigation(firebaseAuth: FirebaseAuth) {
@@ -38,12 +38,24 @@ fun AppNavigation(firebaseAuth: FirebaseAuth) {
 
         navigation<SubNavigation.MainHomeScreen>(startDestination = Routes.HomeScreen) {
             composable<Routes.HomeScreen>{
-                HomeScreenUI()
+                HomeScreenUI(navController = navController)
             }
 
             composable<Routes.ProfileScreen>{
                 ProfilePage()
             }
+        }
+
+        composable<Routes.ProductDetailsScreen> {
+            val data = it.toRoute<Routes.ProductDetailsScreen>()
+
+            ProductDetailsScreen(
+                productId = data.productId
+            )
+        }
+
+        composable<Routes.RegisterAlertDialog> {
+            CustomAlertDialog(navController)
         }
     }
 
