@@ -47,12 +47,12 @@ import com.example.myshoppinguser.ui.theme.customBlack
 import com.example.myshoppinguser.ui.theme.customPink
 
 @Composable
-fun ProductDetailsScreen(viewModel: MyViewModel = hiltViewModel()) {
+fun ProductDetailsScreen(viewModel: MyViewModel = hiltViewModel(),productId :String) {
 
     val productState = viewModel.getProductById.collectAsState().value
 
     LaunchedEffect(Unit) {
-        viewModel.getProductById("oBMh2pcBPuq5uTSIZDRP")
+        viewModel.getProductById(productId)
     }
 
     when {
