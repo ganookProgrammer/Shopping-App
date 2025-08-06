@@ -1,7 +1,5 @@
 package com.example.myshoppinguser.presentation.screen
 
-import android.R.attr.password
-import android.R.attr.phoneNumber
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -44,13 +42,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.example.myshoppinguser.R
+import com.example.myshoppinguser.common.CustomAlertDialog
 import com.example.myshoppinguser.domain.models.User
+import com.example.myshoppinguser.presentation.navigation.Routes
 import com.example.myshoppinguser.presentation.viewmodel.MyViewModel
 import com.example.myshoppinguser.ui.theme.customBlack
 import com.example.myshoppinguser.ui.theme.customPink
-import java.nio.file.WatchEvent
 
 @Composable
 fun SignupScreenUI(viewModel: MyViewModel = hiltViewModel(),navController : NavController) {
@@ -85,6 +83,7 @@ fun SignupScreenUI(viewModel: MyViewModel = hiltViewModel(),navController : NavC
         state.data != null -> {
             Toast.makeText(context, state.data.toString(), Toast.LENGTH_SHORT).show()
             viewModel.resetRegisterState()
+            navController.navigate(Routes.RegisterAlertDialog)
             email = ""
             password = ""
             firstName = ""
@@ -207,21 +206,24 @@ fun SignupScreenUI(viewModel: MyViewModel = hiltViewModel(),navController : NavC
                             lastName = lastName,
                             email = email,
                             password = password,
-                            phoneNumber = phoneNumber
+                             phoneNumber = phoneNumber
                         )
 
-                        if (firstName.isNotEmpty() && lastName.isNotEmpty()
-                            && email.isNotEmpty() && password.isNotEmpty()
-                            && phoneNumber.isNotEmpty() && confirmPassword.isNotEmpty()
-                        ) {
-                            if (password == confirmPassword){
-                                viewModel.registerUser(data)
-                            }else{
-                                Toast.makeText(context, "password mismatch", Toast.LENGTH_SHORT).show()
-                            }
-                  
-
-                        }
+                        viewModel.registerUser(data)
+//                        if (firstName.isNotBlank() && lastName.isNotBlank()
+//                            && email.isNotBlank() && password.isNotBlank()
+//                            && phoneNumber.isNotBlank() && confirmPassword.isNotBlank()
+//                        ) {
+//                            if (password == confirmPassword){
+//                                viewModel.registerUser(data)
+//                            }else{
+//                                Toast.makeText(context, "password mismatch", Toast.LENGTH_SHORT).show()
+//                            }
+//
+//
+//                        }else {
+//                            Toast.makeText(context, "something wrong", Toast.LENGTH_SHORT).show()
+//                        }
                     }, modifier = Modifier
                         .fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(

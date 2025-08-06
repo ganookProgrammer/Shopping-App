@@ -35,15 +35,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.myshoppinguser.R
 import com.example.myshoppinguser.domain.models.Product
+import com.example.myshoppinguser.presentation.navigation.Routes
 import com.example.myshoppinguser.presentation.viewmodel.MyViewModel
 import com.example.myshoppinguser.ui.theme.customBlack
 import com.example.myshoppinguser.ui.theme.customPink
 
 @Composable
-fun ProductItems(viewModel: MyViewModel = hiltViewModel()) {
+fun ProductItems(viewModel: MyViewModel = hiltViewModel(),navController: NavController) {
 
     val productState = viewModel.getAllProductState.collectAsState().value
 
@@ -62,7 +64,8 @@ fun ProductItems(viewModel: MyViewModel = hiltViewModel()) {
         productState.data != null -> {
             LazyRow(modifier = Modifier.fillMaxWidth()) {
                 items(productState.data) { product ->
-                    ProductCard(product)
+                    ProductCard(product
+                    , onItemClick = {navController.navigate(Routes.ProductDetailsScreen(product.productId))})
                 }
             }
         }
@@ -71,7 +74,7 @@ fun ProductItems(viewModel: MyViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun ProductCard(product: Product) {
+fun ProductCard(product: Product,onItemClick:()->Unit) {
 
     val montserratFontFamily = FontFamily(
         Font(R.font.montserrat, FontWeight.Normal)
@@ -85,7 +88,7 @@ fun ProductCard(product: Product) {
     ) {
         Column {
             Card(
-                onClick = {},
+                onClick = {onItemClick()},
                 modifier = Modifier
                     .width(120.dp)
                     .height(140.dp)
