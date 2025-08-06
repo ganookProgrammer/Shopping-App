@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.example.myshoppinguser.common.AlertDialogLogout
 import com.example.myshoppinguser.common.CustomAlertDialog
 import com.example.myshoppinguser.presentation.pages.ProfilePage
 import com.example.myshoppinguser.presentation.screen.HomeScreenUI
@@ -42,7 +43,7 @@ fun AppNavigation(firebaseAuth: FirebaseAuth) {
             }
 
             composable<Routes.ProfileScreen>{
-                ProfilePage()
+                ProfilePage(navController = navController)
             }
         }
 
@@ -57,6 +58,12 @@ fun AppNavigation(firebaseAuth: FirebaseAuth) {
         composable<Routes.RegisterAlertDialog> {
             CustomAlertDialog(navController)
         }
+
+        composable<Routes.AlertDialogLogout>{
+            AlertDialogLogout(navController , auth = firebaseAuth)
+        }
+
+
     }
 
 }
