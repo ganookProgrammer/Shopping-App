@@ -51,4 +51,7 @@ sealed class Routes{
 
     @Serializable
     object RegisterAlertDialog
+
+    @Serializable
+    object AlertDialogLogout
 }
