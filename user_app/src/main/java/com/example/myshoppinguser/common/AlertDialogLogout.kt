@@ -37,133 +37,145 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
 import com.example.myshoppinguser.R
+import com.example.myshoppinguser.presentation.navigation.Routes
 import com.example.myshoppinguser.ui.theme.customPink
+import com.google.firebase.auth.FirebaseAuth
 
 
-
-@Composable
-fun AlertDialogLogout(modifier: Modifier = Modifier) {
-
-    var openAlert =  remember { mutableStateOf(false) }
-//    Button(onClick = {
-//        openAlert.value = true
-//    }) { Text("show alert box")}
+//@Composable
+//fun AlertDialogLogout(modifier: Modifier = Modifier) {
 //
-//    if (openAlert.value){
-//       AlertDialog(openAlert)
+//    var openAlert =  remember { mutableStateOf(false) }
+////    Button(onClick = {
+////        openAlert.value = true
+////    }) { Text("show alert box")}
+////
+////    if (openAlert.value){
+////       AlertDialog(openAlert)
+////    }
+//    AlertDialog(openAlert)
+//}
+//
+//@Composable
+//fun AlertDialog(openAlert : MutableState<Boolean> ) {
+//
+//    Dialog(onDismissRequest = {
+//        openAlert.value = false
+//    }) {
+//        CustomUI(openAlert)
 //    }
-    AlertDialog(openAlert)
-}
+//}
 
 @Composable
-fun AlertDialog(openAlert : MutableState<Boolean> ) {
+ fun AlertDialogLogout(navController: NavController , auth : FirebaseAuth){
 
-    Dialog(onDismissRequest = {
+    var openAlert =  remember { mutableStateOf(true)}
+
+        Dialog(onDismissRequest = {
         openAlert.value = false
     }) {
-        CustomUI(openAlert)
-    }
-}
 
-@Composable
-private fun CustomUI(openAlert : MutableState<Boolean>){
 
-    Box(modifier = Modifier.fillMaxSize()
-//        .background(brush = Brush.verticalGradient(
-//            colors = listOf(
-//                Color.Black.copy(alpha = 0.7f),
-//                Color.Transparent
-//        )))
-        ,
-        contentAlignment = Alignment.Center) {
-        Card(
-            modifier = Modifier.width(291.dp)
-                .height(301.dp),
-            shape = RoundedCornerShape(12.dp),
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 8.dp
-            )
-        ) {
-
-            Column(
-                modifier = Modifier.fillMaxSize()
-                    .background(Color.White)
-                ,
-                verticalArrangement = Arrangement.Center
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-
-
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.profile),
-                            contentDescription = "Profile",
-                            modifier = Modifier.size(64.dp)
-                        )
-                    }
-
-                    Text(
-                        text = "LOG OUT",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = customPink
+                Card(
+                    modifier = Modifier.width(291.dp)
+                        .height(301.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation = 8.dp
                     )
+                ) {
 
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = "Do you Really",
-                            fontSize = 12.sp,
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                            .background(Color.White),
+                        verticalArrangement = Arrangement.Center
+                    ) {
 
-                            )
 
-                        Text(
-                            text = "Want To Logout",
-                            fontSize = 12.sp
-                        )
-                    }
-
-                    Row {
-
-                        OutlinedButton(onClick = {},
-                            modifier = Modifier.fillMaxWidth()
-                                .weight(1f),
-                            colors = ButtonDefaults.buttonColors(
-                                contentColor = Color.Red,
-                                containerColor = Color.Transparent
-                            ),
-                            shape = RoundedCornerShape(12.dp),
-                           border = BorderStroke(1.dp , Color.Red)) {
-                            Text(
-                                text = "Cancel"
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.width(15.dp))
-                        Button(
-                            onClick = {
-                                openAlert.value = false
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                                .weight(1f),
-                            shape = RoundedCornerShape(12.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = customPink
-                            )
+                        Column(
+                            modifier = Modifier
+                                .padding(horizontal = 20.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
                         ) {
-                            Text(text = "Log Out")
+                            Box(
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Image(
+                                    painter = painterResource(R.drawable.profile),
+                                    contentDescription = "Profile",
+                                    modifier = Modifier.size(64.dp)
+                                )
+                            }
+
+                            Text(
+                                text = "LOG OUT",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = customPink
+                            )
+
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text(
+                                    text = "Do you Really",
+                                    fontSize = 12.sp,
+
+                                    )
+
+                                Text(
+                                    text = "Want To Logout",
+                                    fontSize = 12.sp
+                                )
+                            }
+
+                            Row {
+
+                                OutlinedButton(
+                                    onClick = {openAlert.value = false
+                                              navController.navigate(Routes.ProfileScreen)},
+                                    modifier = Modifier.fillMaxWidth()
+                                        .weight(1f),
+                                    colors = ButtonDefaults.buttonColors(
+                                        contentColor = Color.Red,
+                                        containerColor = Color.Transparent
+                                    ),
+                                    shape = RoundedCornerShape(12.dp),
+                                    border = BorderStroke(1.dp, Color.Red)
+                                ) {
+                                    Text(
+                                        text = "Cancel"
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.width(15.dp))
+                                Button(
+                                    onClick = {
+
+                                        auth.signOut()
+                                        openAlert.value = false
+                                        navController.navigate(Routes.LoginScreen)
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                        .weight(1f),
+                                    shape = RoundedCornerShape(12.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = customPink
+                                    )
+                                ) {
+                                    Text(text = "Log Out")
+                                }
+                            }
                         }
                     }
+
                 }
             }
 
         }
-    }
 }

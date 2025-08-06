@@ -92,7 +92,7 @@ fun Items(modifier: Modifier = Modifier , selectedIndex : Int,navController: Nav
         0 -> HomePage(modifier, navController = navController)
         1 -> FavoritePage(modifier)
         2 -> CartPage(modifier)
-        3 -> ProfilePage(modifier)
+        3 -> ProfilePage(modifier , navController)
     }
 }
 data class NavigationItems(
