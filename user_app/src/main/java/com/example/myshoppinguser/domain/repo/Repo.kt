@@ -11,6 +11,7 @@ interface Repo {
 //    Authentication
     fun registerUserWithEmailPass(user: User): Flow<ResultState<String>>
     fun loginUserWithEmailPass(email :String , password : String)  : Flow<ResultState<String>>
+    fun getUserInformation() : Flow<ResultState<List<User>>>
 
     fun getAllCategory(): Flow<ResultState<List<Category>>>
 
