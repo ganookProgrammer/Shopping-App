@@ -18,46 +18,36 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
 import com.example.myshoppinguser.R
+import com.example.myshoppinguser.presentation.navigation.Routes
 import com.example.myshoppinguser.ui.theme.customPink
 
 
-@Composable
-fun custom(){
-    var openAlert =  remember { mutableStateOf(false) }
-    Button(onClick = {
-        openAlert.value = true
-    }) { Text("show alert box")}
 
-    if (openAlert.value){
-        CustomAlertDialog(openAlert)
-    }
-}
 @Composable
-fun CustomAlertDialog(openAlert : MutableState<Boolean>) {
+fun CustomAlertDialog(navController: NavController) {
 
+    var openAlert = remember { mutableStateOf(true) }
     Dialog(onDismissRequest = {
         openAlert.value = false
     }) {
-        CustomUI(openAlert)
+        CustomUI(openAlert , navController = navController)
     }
 }
 
 @Composable
-private fun CustomUI(openAlert : MutableState<Boolean>){
+private fun CustomUI(openAlert : MutableState<Boolean>,navController: NavController){
 
     Box(modifier = Modifier.fillMaxSize()
 //        .background(brush = Brush.verticalGradient(
@@ -119,6 +109,8 @@ private fun CustomUI(openAlert : MutableState<Boolean>){
                     Button(
                         onClick = {
                             openAlert.value = false
+                            navController.navigate(Routes.HomeScreen)
+
                         },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
