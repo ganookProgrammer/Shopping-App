@@ -1,7 +1,5 @@
 package com.example.myshoppinguser.common
 
-import android.R.attr.phoneNumber
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -15,22 +13,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.windowInsetsEndWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,25 +32,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ModifierInfo
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.myshoppinguser.R
-import com.example.myshoppinguser.domain.models.User
+import com.example.myshoppinguser.presentation.navigation.Routes
 import com.example.myshoppinguser.ui.theme.customBlack
 import com.example.myshoppinguser.ui.theme.customPink
-import com.google.firestore.v1.TransactionOptions
-import java.nio.file.WatchEvent
 
 @Composable
-fun ProfileEdit() {
-
+fun ProfileEdit(navController: NavController) {
 
     val context = LocalContext.current
 
@@ -66,8 +52,7 @@ fun ProfileEdit() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var address by remember { mutableStateOf("") }
-
-//        var address by remember { mutableStateOf("") }
+    var isEdit by remember { mutableStateOf(true) }
 
 
     Box(
@@ -118,7 +103,7 @@ fun ProfileEdit() {
                         .fillMaxWidth()
                         .weight(1f),
                     maxLines = 1,
-                    readOnly = true
+                    readOnly = isEdit
                 )
 
                 OutlinedTextField(
@@ -134,7 +119,7 @@ fun ProfileEdit() {
                         .fillMaxWidth()
                         .weight(1f),
                     maxLines = 1,
-                    readOnly = true
+                    readOnly = isEdit
                 )
 
             }
@@ -151,7 +136,7 @@ fun ProfileEdit() {
                 modifier = Modifier
                     .fillMaxWidth(),
                 maxLines = 1,
-                readOnly = true
+                readOnly = isEdit
             )
             Spacer(modifier = Modifier.height(10.dp))
             OutlinedTextField(
@@ -166,7 +151,7 @@ fun ProfileEdit() {
                 modifier = Modifier
                     .fillMaxWidth(),
                         maxLines = 1,
-                readOnly = true
+                readOnly = isEdit
             )
             Spacer(modifier = Modifier.height(10.dp))
             OutlinedTextField(
@@ -181,13 +166,14 @@ fun ProfileEdit() {
                 modifier = Modifier
                     .fillMaxWidth(),
                 maxLines = 1,
-                readOnly = true
+                readOnly = isEdit
 
             )
 
             Spacer(modifier = Modifier.height(10.dp))
             Button(
                 onClick = {
+                    navController.navigate(Routes.AlertDialogLogout)
                     }
                 , modifier = Modifier
                     .fillMaxWidth(),
@@ -202,7 +188,7 @@ fun ProfileEdit() {
 
             Spacer(modifier = Modifier.height(10.dp))
             OutlinedButton(
-                onClick = {},
+                onClick = { isEdit = !isEdit},
                 modifier = Modifier.fillMaxWidth(),
                 border = BorderStroke(1.dp, customPink),
                 colors = ButtonDefaults.buttonColors(
@@ -216,7 +202,7 @@ fun ProfileEdit() {
 
                 // Text in center
                 Text(
-                    text = "Edit Profile",
+                    text = if (isEdit) "Edit Profile" else "Update",
                     textAlign = TextAlign.Center
                 )
             }
