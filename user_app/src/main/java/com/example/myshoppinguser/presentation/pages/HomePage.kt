@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.myshoppinguser.common.BannerViewItems
 import com.example.myshoppinguser.common.CategoriesItem
 import com.example.myshoppinguser.common.CategoriesView
@@ -18,7 +19,7 @@ import com.example.myshoppinguser.common.ProductView
 import com.example.myshoppinguser.presentation.viewmodel.MyViewModel
 
 @Composable
-fun HomePage(modifier: Modifier = Modifier , viewModel: MyViewModel = hiltViewModel()) {
+fun HomePage(modifier: Modifier = Modifier , viewModel: MyViewModel = hiltViewModel(),navController: NavController) {
 
             Column(modifier = Modifier.fillMaxSize()
                 .padding(horizontal = 20.dp)){
@@ -38,7 +39,7 @@ fun HomePage(modifier: Modifier = Modifier , viewModel: MyViewModel = hiltViewMo
                 ProductView()
 
                 Spacer(Modifier.height(20.dp))
-                ProductItems()
+                ProductItems(navController = navController)
 
             }
         }
