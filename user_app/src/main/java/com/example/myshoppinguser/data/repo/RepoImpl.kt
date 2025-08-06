@@ -61,6 +61,27 @@ class RepoImpl @Inject constructor(
         }
     }
 
+    override fun getUserInformation(): Flow<ResultState<List<User>>> = callbackFlow{
+        trySend(ResultState.Loading)
+
+        val listener = firestore.collection(USERS).addSnapshotListener { snapshot , error ->
+            if (error !=null){
+             trySend(ResultState.Error(error.message?:"Unknow error"))
+                return@addSnapshotListener
+            }
+
+            val list = snapshot?.documents?.mapNotNull {
+                it.toObject(User::class.java)
+            }?: emptyList()
+
+            trySend(ResultState.Success(list))
+        }
+
+        awaitClose{
+            listener.remove()
+        }
+    }
+
     override fun getAllCategory(): Flow<ResultState<List<Category>>> = callbackFlow {
         trySend(ResultState.Loading)
 
