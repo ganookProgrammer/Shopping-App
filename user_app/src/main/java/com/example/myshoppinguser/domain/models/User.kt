@@ -1,11 +1,11 @@
 package com.example.myshoppinguser.domain.models
 
 data class User(
-    val firstName : String = "",
-    val lastName : String = "",
-    val email : String = "",
+    var firstName : String = "",
+    var lastName : String = "",
+    var email : String = "",
     val password : String = "",
-    val phoneNumber : String = "",
-    val address : String = "",
+    var phoneNumber : String = "",
+    var address : String = "",
     val userImage : String = ""
 )

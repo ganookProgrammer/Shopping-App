@@ -12,6 +12,7 @@ import com.example.myshoppinguser.domain.repo.Repo
 import com.google.android.gms.auth.api.signin.internal.Storage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObjects
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -61,25 +62,24 @@ class RepoImpl @Inject constructor(
         }
     }
 
-    override fun getUserInformation(): Flow<ResultState<List<User>>> = callbackFlow{
+    override fun getUserInformation(): Flow<ResultState<User>> = callbackFlow {
         trySend(ResultState.Loading)
+        val userId = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
 
-        val listener = firestore.collection(USERS).addSnapshotListener { snapshot , error ->
-            if (error !=null){
-             trySend(ResultState.Error(error.message?:"Unknow error"))
-                return@addSnapshotListener
+        firestore.collection(USERS).document(userId).get()
+            .addOnSuccessListener { document ->
+                val user = document.toObject(User::class.java)
+                if (user != null) {
+                    trySend(ResultState.Success(user))  // ✅ works now
+                } else {
+                    trySend(ResultState.Error("User not found"))
+                }
+            }
+            .addOnFailureListener {
+                trySend(ResultState.Error(it.message ?: "Unknown error"))
             }
 
-            val list = snapshot?.documents?.mapNotNull {
-                it.toObject(User::class.java)
-            }?: emptyList()
-
-            trySend(ResultState.Success(list))
-        }
-
-        awaitClose{
-            listener.remove()
-        }
+        awaitClose { close() }
     }
 
     override fun getAllCategory(): Flow<ResultState<List<Category>>> = callbackFlow {

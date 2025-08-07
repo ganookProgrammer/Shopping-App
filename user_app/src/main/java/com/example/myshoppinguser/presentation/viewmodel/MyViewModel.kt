@@ -10,6 +10,7 @@ import com.example.myshoppinguser.domain.use_case.GetAllCategoryUseCase
 import com.example.myshoppinguser.domain.use_case.GetAllProductUseCase
 import com.example.myshoppinguser.domain.use_case.GetBannerImageUseCase
 import com.example.myshoppinguser.domain.use_case.GetProductByIdUseCase
+import com.example.myshoppinguser.domain.use_case.GetUserInformationUseCase
 import com.example.myshoppinguser.domain.use_case.LoginWithEmailAndPassUseCase
 import com.example.myshoppinguser.domain.use_case.RegisterUserWithEmailPassUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +27,8 @@ class MyViewModel @Inject constructor(
     private val loginWithEmailAndPassUseCase: LoginWithEmailAndPassUseCase,
     private val getBannerImageUseCase: GetBannerImageUseCase,
     private val getAllProductUseCase: GetAllProductUseCase,
-    private val getProductByIdUseCase: GetProductByIdUseCase
+    private val getProductByIdUseCase: GetProductByIdUseCase,
+    private val getUserInformationUseCase: GetUserInformationUseCase
 ) : ViewModel() {
 
     private val _getCategoryState = MutableStateFlow(GetCategoryState())
@@ -47,6 +49,13 @@ class MyViewModel @Inject constructor(
     private val _getProductById = MutableStateFlow(GetProductByIdState())
     val getProductById = _getProductById.asStateFlow()
 
+    private val _getUserInformationState = MutableStateFlow(GetUserInformationState())
+    val getUserInformationState = _getUserInformationState.asStateFlow()
+
+    fun restUserInformation() {
+        _getUserInformationState.value = GetUserInformationState()
+    }
+
     fun resetProductById() {
         _getProductById.value = GetProductByIdState()
     }
@@ -65,6 +74,21 @@ class MyViewModel @Inject constructor(
 
     fun resetLoginState() {
         _loginState.value = LoginState()
+    }
+
+    fun getUserInformation() {
+        viewModelScope.launch {
+            getUserInformationUseCase.getUserInformationUseCase().collectLatest {
+                when (it) {
+                    is ResultState.Loading -> _getUserInformationState.value =
+                        GetUserInformationState(isLoading = true)
+                    is ResultState.Error -> _getUserInformationState.value =
+                        GetUserInformationState(isLoading = false , error = it.error)
+                   is ResultState.Success -> _getUserInformationState.value =
+                       GetUserInformationState(data = it.data)
+                }
+            }
+        }
     }
 
     fun getProductById(productId: String) {
@@ -112,7 +136,7 @@ class MyViewModel @Inject constructor(
                         GetBannerImageState(isLoading = true)
 
                     is ResultState.Success -> _getBannerState.value =
-                        GetBannerImageState(isLoading = false, data = it.data)
+                        GetBannerImageState(data = it.data)
                 }
             }
         }
@@ -210,6 +234,13 @@ data class GetProductByIdState(
     val error: String? = null,
     val data: Product? = null
 )
+
+data class GetUserInformationState(
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val data: User? = null
+)
+
 
 //data class HomeScreenState(
 //    val isLoading: Boolean = true,
