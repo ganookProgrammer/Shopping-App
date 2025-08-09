@@ -1,5 +1,6 @@
 package com.example.myshoppinguser.data.repo
 
+import android.net.Uri
 import androidx.compose.runtime.mutableStateOf
 import com.example.myshoppinguser.common.CATEGORY
 import com.example.myshoppinguser.common.PRODUCT
@@ -91,8 +92,8 @@ class RepoImpl @Inject constructor(
                 return@addSnapshotListener
             }
             val list = snapshot?.documents?.mapNotNull {
-                it.toObject(Category::class.java)
-            } ?: emptyList()
+                    it.toObject(Category::class.java)
+                } ?: emptyList()
 
             trySend(ResultState.Success(list))
         }
@@ -176,6 +177,35 @@ class RepoImpl @Inject constructor(
         }.addOnFailureListener {
             trySend(ResultState.Error(it.toString()))
         }
+        awaitClose{
+            close()
+        }
+    }
+
+    override fun updateUserData(user: User): Flow<ResultState<String>> = callbackFlow {
+        trySend(ResultState.Loading)
+
+        firestore.collection(USERS).document(auth.uid.toString()).set(user).addOnSuccessListener {
+            trySend(ResultState.Success("User Data Updated Successfully"))
+        }.addOnFailureListener {
+            trySend(ResultState.Error(it.toString()))
+        }
+        awaitClose{
+            close()
+        }
+    }
+
+    override fun uploadUserImage(imageUri: Uri): Flow<ResultState<String>> = callbackFlow{
+        trySend(ResultState.Loading)
+
+        storage.reference.child("UserProfile/${System.currentTimeMillis()}+${auth.currentUser?.uid }")
+            .putFile(imageUri).addOnSuccessListener {
+                it.storage.downloadUrl.addOnSuccessListener {image->
+                    trySend(ResultState.Success(image.toString()))
+                }
+            }.addOnFailureListener {
+                trySend(ResultState.Error(it.toString()))
+            }
         awaitClose{
             close()
         }

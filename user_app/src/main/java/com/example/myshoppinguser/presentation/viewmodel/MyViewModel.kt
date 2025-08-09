@@ -1,5 +1,6 @@
 package com.example.myshoppinguser.presentation.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myshoppinguser.state.ResultState
@@ -13,6 +14,10 @@ import com.example.myshoppinguser.domain.use_case.GetProductByIdUseCase
 import com.example.myshoppinguser.domain.use_case.GetUserInformationUseCase
 import com.example.myshoppinguser.domain.use_case.LoginWithEmailAndPassUseCase
 import com.example.myshoppinguser.domain.use_case.RegisterUserWithEmailPassUseCase
+import com.example.myshoppinguser.domain.use_case.UpdateUserDataUserCase
+import com.example.myshoppinguser.domain.use_case.UploadUserImageUseCase
+import com.google.android.play.integrity.internal.u
+import com.google.firebase.firestore.core.UserData.Source.Update
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,7 +33,9 @@ class MyViewModel @Inject constructor(
     private val getBannerImageUseCase: GetBannerImageUseCase,
     private val getAllProductUseCase: GetAllProductUseCase,
     private val getProductByIdUseCase: GetProductByIdUseCase,
-    private val getUserInformationUseCase: GetUserInformationUseCase
+    private val getUserInformationUseCase: GetUserInformationUseCase,
+    private val updateUserDataUseCase: UpdateUserDataUserCase,
+    private val updateUserImageProfileUseCase: UploadUserImageUseCase
 ) : ViewModel() {
 
     private val _getCategoryState = MutableStateFlow(GetCategoryState())
@@ -51,6 +58,12 @@ class MyViewModel @Inject constructor(
 
     private val _getUserInformationState = MutableStateFlow(GetUserInformationState())
     val getUserInformationState = _getUserInformationState.asStateFlow()
+
+    private val _updateUserDataState = MutableStateFlow(UpdateUserDataUserState())
+    val updateUserDataState = _updateUserDataState.asStateFlow()
+
+    private val _updateUserProfileState = MutableStateFlow(UploadUserImageState())
+    val updateUserProfileState = _updateUserProfileState.asStateFlow()
 
     fun restUserInformation() {
         _getUserInformationState.value = GetUserInformationState()
@@ -76,16 +89,53 @@ class MyViewModel @Inject constructor(
         _loginState.value = LoginState()
     }
 
+    fun updateUserData(user: User) {
+        viewModelScope.launch {
+            updateUserDataUseCase.updateUserDataUseCase(user).collectLatest {
+                when (it) {
+                    is ResultState.Loading -> _updateUserDataState.value =
+                        UpdateUserDataUserState(isLoading = true)
+
+                    is ResultState.Error -> _updateUserDataState.value =
+                        UpdateUserDataUserState(error = it.toString())
+
+                    is ResultState.Success -> _updateUserDataState.value =
+                        UpdateUserDataUserState(data = it.data)
+                }
+            }
+        }
+    }
+
+    fun updateUserImageProfile(image: Uri) {
+        viewModelScope.launch {
+            updateUserImageProfileUseCase.uploadUserImageUseCase(image).collectLatest {
+                when (it) {
+                    is ResultState.Error -> _updateUserProfileState.value =
+                        UploadUserImageState(error = it.toString())
+
+                    is ResultState.Success -> _updateUserProfileState.value =
+                        UploadUserImageState(data = it.data)
+
+                    is ResultState.Loading -> _updateUserProfileState.value =
+                        UploadUserImageState(isLoading = true)
+                }
+
+            }
+        }
+    }
+
     fun getUserInformation() {
         viewModelScope.launch {
             getUserInformationUseCase.getUserInformationUseCase().collectLatest {
                 when (it) {
                     is ResultState.Loading -> _getUserInformationState.value =
                         GetUserInformationState(isLoading = true)
+
                     is ResultState.Error -> _getUserInformationState.value =
-                        GetUserInformationState(isLoading = false , error = it.error)
-                   is ResultState.Success -> _getUserInformationState.value =
-                       GetUserInformationState(data = it.data)
+                        GetUserInformationState(isLoading = false, error = it.error)
+
+                    is ResultState.Success -> _getUserInformationState.value =
+                        GetUserInformationState(data = it.data)
                 }
             }
         }
@@ -241,7 +291,17 @@ data class GetUserInformationState(
     val data: User? = null
 )
 
+data class UpdateUserDataUserState(
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val data: String? = null
+)
 
+data class UploadUserImageState(
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val data: String? = null
+)
 //data class HomeScreenState(
 //    val isLoading: Boolean = true,
 //    val error: String? = null,
